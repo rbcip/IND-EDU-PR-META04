@@ -5,7 +5,7 @@ from fake_useragent import UserAgent
 import traceback
 import os
 import time
-import shutil
+import sys
 import subprocess
 
 def runcmd(cmd, verbose = False, *args, **kwargs):
@@ -78,5 +78,9 @@ def baixa_zips(fontes, ano=None, reload_links=False):
 
 
 if __name__ == "__main__":
-    baixa_zips(default_sourcers, reload_links=False)
+    ano=None
+    if len(sys.argv) > 1:
+        ano=str(sys.argv[1])
+    
+    baixa_zips(default_sourcers, ano=ano, reload_links=True)
     
