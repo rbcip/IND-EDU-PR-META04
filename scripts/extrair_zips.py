@@ -1,7 +1,7 @@
 from configs import DATA_DIR, default_sourcers
 import os
 import zipfile
-
+import re
 
 def extrair_csvs(sourcers):
     for source in sourcers:
@@ -11,14 +11,22 @@ def extrair_csvs(sourcers):
             
         list_dir = os.listdir(source['diretorio_zip'])
         for file in list_dir:
-            if file[-4: ] == '.zip':
+            if file[-4: ].lower() == '.zip':
                 with zipfile.ZipFile(os.path.join(source['diretorio_zip'], file), 'r') as zip_ref:
                     infiles = zip_ref.namelist()
                     for infile in infiles:
-                        if infile[-4:] == '.csv':
+                        if infile[-4:].lower() == '.csv' or ( infile[-4:].lower() == '.txt' and '_saeb' in file ):
                             fin = zip_ref.open(infile)
                             content = fin.read()
-                            with open(os.path.join(DATA_DIR, source['descricao'], infile.split('/')[-1].lower()), 'wb') as f:
+                            name_file = infile.split('/')[-1].lower()
+                            if not re.search('[0-9]{4}\.[a-z]{3}', name_file):
+                                r = re.search('[0-9]{4}', file)
+                                if r:
+                                    ano = r.group()
+                                else:
+                                    ano = "SANO"
+                                name_file = name_file[:-4] + '_' + ano + name_file[-4:]
+                            with open(os.path.join(DATA_DIR, source['descricao'], name_file), 'wb') as f:
                                 f.write(content)
 
 

@@ -1,0 +1,1 @@
+docker run -p 5432:5432 --memory="4096m" -v /home/gvanerven/code/IND-EDU-PR-META04/dados/postgres:/var/lib/postgresql/data -e POSTGRES_PASSWORD=1234 --name indicadorespr -d postgres
