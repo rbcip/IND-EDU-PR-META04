@@ -1,7 +1,6 @@
 import pandas as pd
 import os
 from sqlalchemy import create_engine
-from sqlalchemy import text
 from sqlalchemy.engine import URL
 from configs import DATA_DIR, default_sourcers
 import re
@@ -124,7 +123,6 @@ def salva_por_arquivo_banco(dir_base: str, sourcers, engine):
                 sep, n_cols, temHeader = identifica_separador(arquivo)
                 tab_name = '_'.join(filename.split('.')[:-1])
                 
-                #FROM '/mnt/{sourcer['descricao']}/{filename}'
                 if temHeader:
                     HEADER = 'true'
                 else:
@@ -153,43 +151,28 @@ def salva_por_arquivo_banco(dir_base: str, sourcers, engine):
                         if k in list(df.columns):
                             if df.query(f"{k} == '{sourcer['filtro'][k]}'").shape[0] > 0:
                                 df = df.query(f"{k} == '{sourcer['filtro'][k]}'")
-                    #df = pd.read_csv(arquivo, encoding='ISO-8859-1', sep=sep, engine='c', low_memory=False, nrows=2000, **params)
-                    #df = pd.read_csv(arquivo, encoding='ISO-8859-1', sep=sep, engine='pyarrow')
-                    print(f"Adicionando estrutura: {filename} com shape {df.shape}")
-                    #df.iloc[0:1,:].to_sql(tab_name, schema=schema, con=engine, chunksize = 5000, index=False, method=None, if_exists='replace')
+
+                    print(f"Filtrando: {filename} com shape {df.shape}")
+
                     if n_cols <= 1600:
-                        #df.iloc[0:1,:].to_sql(tab_name, schema=schema, con=engine, chunksize = 5000, index=False, method=None, if_exists='replace')
+
                         df.to_sql(tab_name, schema=schema, con=engine, chunksize = 5000, index=False, method=None, if_exists='replace')
                         del df
                         print(f"Adicionando dados: {schema}.{tab_name}")
-                        #with engine.connect() as connection:
-                        #    connection.execute(text(f"truncate table {schema}.{tab_name}"))
-                        #    connection.commit()
-                        #    connection.execute(text(copy))
-                        #    connection.commit()
+                        
                     else:
                         columns = list(df.columns)
                         left_col = columns[:math.celing(n_cols/2)]
                         rigth_col = columns[math.celing(n_cols/2):]
                         print(f"{schema}.{tab_name} dividida por ter mais de 1600 colunas: {n_cols} colunas")
-                        #df[left_col].iloc[0:1,:].to_sql(f"part01_{tab_name}", schema=schema, con=engine, chunksize = 5000, index=True, method=None, if_exists='replace')
+
                         df[left_col].to_sql(f"part01_{tab_name}", schema=schema, con=engine, chunksize = 5000, index=True, method=None, if_exists='replace')
                         print(f"Adicionando dados: {schema}.part01_{tab_name}")
-                        #with engine.connect() as connection:
-                        #    connection.execute(text(f"truncate table {schema}.part01_{tab_name}"))
-                        #    connection.commit()
-                        #    connection.execute(text(copy))
-                        #    connection.commit()
-                        
-                        #df[rigth_col].iloc[0:1,:].to_sql(f"part02_{tab_name}", schema=schema, con=engine, chunksize = 5000, index=True, method=None, if_exists='replace')
+
                         df[rigth_col].to_sql(f"part02_{tab_name}", schema=schema, con=engine, chunksize = 5000, index=True, method=None, if_exists='replace')
                         del df
                         print(f"Adicionando dados: {schema}.part02_{tab_name}")
-                        #with engine.connect() as connection:
-                        #    connection.execute(text(f"truncate table {schema}.part02_{tab_name}"))
-                        #    connection.commit()
-                        #    connection.execute(text(copy))
-                        #    connection.commit()
+
                 except:
                     print(traceback.format_exc())
                     print(f"Erro ao carrgar arquivo: {arquivo}")
