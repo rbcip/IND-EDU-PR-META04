@@ -8,7 +8,7 @@ import time
 import traceback
 
 DIR_DADOS = os.path.join(DATA_DIR, 'bolsafamilia')
-lst_anos = range(2004,date.today().year)
+lst_anos = range(2013, date.today().year) #Um ano antes de PNE
 url_d2023 = "https://aplicacoes.mds.gov.br/sagi/servicos/misocial/?fq=anomes_s:{ano}*&fl=codigo_ibge%2Canomes_s%2Cqtd_familias_beneficiarias_bolsa_familia_s%2Cvalor_repassado_bolsa_familia_s%2Cpbf_vlr_medio_benef_f&fq=valor_repassado_bolsa_familia_s%3A*&q=*%3A*&rows=100000&sort=anomes_s%20desc%2C%20codigo_ibge%20asc&wt=csv"
 url_a2023 = "https://aplicacoes.mds.gov.br/sagi/servicos/misocial?fq=anomes_s:{ano}*&fq=tipo_s:mes_mu&wt=csv&q=*&fl=ibge:codigo_ibge,anomes:anomes_s,qtd_familias_beneficiarias_bolsa_familia,valor_repassado_bolsa_familia&rows=10000000&sort=anomes_s%20asc,%20codigo_ibge%20asc"
 

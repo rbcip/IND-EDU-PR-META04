@@ -8,6 +8,7 @@ import time
 import sys
 import subprocess
 from configs import CERT, TMP_DIR, default_sourcers
+from datetime import date
 
 def runcmd(cmd, verbose = False, *args, **kwargs):
 
@@ -33,15 +34,18 @@ class ObjectScraper():
         return str(self.__dict__)
 
 
-def baixa_zips(fontes, ano=None, reload_links=False):
+def baixa_zips(fontes, anos=None, reload_links=False):
+    if anos == None:
+        anos_lista = list(range(2013, date.today().year)) #Um ano antes do PNE
+    else:
+        anos_lista = anos
+        
     for fonte in fontes:
         try:
             s = requests.Session()
             file_html = os.path.join(TMP_DIR, f"{fonte['descricao']}.html")
-            if ano != None:
-                busca = re.compile(f'https.*{ano}.*\.zip')
-            else:
-                busca = re.compile('https.*\.zip') 
+            
+            busca = re.compile('https.*\.zip') 
             
             if not os.path.exists(file_html) or reload_links:
                 reponse_http = s.get(fonte["url"], allow_redirects=True, verify=ObjectScraper.verify, headers=ObjectScraper.headers)
@@ -57,11 +61,17 @@ def baixa_zips(fontes, ano=None, reload_links=False):
                 
             ext_links_zip = soup.find_all("a", {'class': "external-link", 'href': busca})
             for link in ext_links_zip:
-                file_name_aux = os.path.join(fonte["diretorio_zip"], link["href"].split("/")[-1])
-                print(f'Baixando {link["href"]} para {file_name_aux}')
-                cmd = f"wget -c --ca-certificate={CERT}  {link['href']} -O {file_name_aux}"
-                runcmd(cmd, verbose = False)
-                time.sleep(5)
+                i = 0
+                while i < len(anos_lista):
+                    ano_busca = re.compile(f'https.*{anos_lista[i]}.*\.zip')
+                    if re.search(ano_busca, link["href"]):
+                        file_name_aux = os.path.join(fonte["diretorio_zip"], link["href"].split("/")[-1])
+                        print(f'Baixando {link["href"]} para {file_name_aux}')
+                        cmd = f"wget -c --ca-certificate={CERT}  {link['href']} -O {file_name_aux}"
+                        runcmd(cmd, verbose = False)
+                        time.sleep(5)
+                        i = len(anos_lista) #Sai do laço
+                    i += 1
                 
         except Exception:
             print(traceback.format_exc())
@@ -71,7 +81,7 @@ def baixa_zips(fontes, ano=None, reload_links=False):
 if __name__ == "__main__":
     ano=None
     if len(sys.argv) > 1:
-        ano=str(sys.argv[1])
+        ano = [str(sys.argv[1])]
     
-    baixa_zips(default_sourcers, ano=ano, reload_links=True)
+    baixa_zips(default_sourcers, anos=ano, reload_links=True)
     

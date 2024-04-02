@@ -19,6 +19,7 @@ def extrair_csvs(sourcers):
                             fin = zip_ref.open(infile)
                             content = fin.read()
                             name_file = infile.split('/')[-1].lower()
+                            name_file = name_file[:-4] + '.csv'
                             if not re.search('[0-9]{4}\.[a-z]{3}', name_file):
                                 r = re.search('[0-9]{4}', file)
                                 if r:

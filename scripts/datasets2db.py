@@ -5,6 +5,8 @@ from sqlalchemy import text
 from sqlalchemy.engine import URL
 from configs import DATA_DIR, default_sourcers
 import re
+import math
+import traceback
 
 def extrair_nm_base(txt):
     aux = txt.split('.')[0]
@@ -122,12 +124,19 @@ def salva_por_arquivo_banco(dir_base: str, sourcers, engine):
                 sep, n_cols, temHeader = identifica_separador(arquivo)
                 tab_name = '_'.join(filename.split('.')[:-1])
                 
+                #FROM '/mnt/{sourcer['descricao']}/{filename}'
+                if temHeader:
+                    HEADER = 'true'
+                else:
+                    HEADER = 'false'
+                
                 copy = f"""
                             COPY {schema}.{tab_name}
-                            FROM '/mnt/{sourcer['descricao']}/{filename}'
+                            FROM 'D:\\tmp\\pgtmp\\{sourcer['descricao']}\\{filename}'
                             DELIMITER '{sep}'
                             ENCODING 'ISO-8859-1'
-                            CSV HEADER;
+                            CSV 
+                            HEADER {HEADER};
                         """
                 params = {}
                 
@@ -138,22 +147,52 @@ def salva_por_arquivo_banco(dir_base: str, sourcers, engine):
                     params['header'] = None
                     params['names'] = header
                 
-                if n_cols <= 1600:
-                    df = pd.read_csv(arquivo, encoding='ISO-8859-1', sep=sep, engine='c', low_memory=False, nrows=2000, **params)
+                try:
+                    df = pd.read_csv(arquivo, encoding='ISO-8859-1', sep=sep, engine='c', low_memory=False, **params)
+                    for k in sourcer['filtro']:
+                        if k in list(df.columns):
+                            if df.query(f"{k} == '{sourcer['filtro'][k]}'").shape[0] > 0:
+                                df = df.query(f"{k} == '{sourcer['filtro'][k]}'")
+                    #df = pd.read_csv(arquivo, encoding='ISO-8859-1', sep=sep, engine='c', low_memory=False, nrows=2000, **params)
                     #df = pd.read_csv(arquivo, encoding='ISO-8859-1', sep=sep, engine='pyarrow')
                     print(f"Adicionando estrutura: {filename} com shape {df.shape}")
                     #df.iloc[0:1,:].to_sql(tab_name, schema=schema, con=engine, chunksize = 5000, index=False, method=None, if_exists='replace')
-                    df.iloc[0:1,:].to_sql(tab_name, schema=schema, con=engine, chunksize = 5000, index=False, method=None)
-                    del df
-                    print(f"Adicionando dados: {schema}.{tab_name}")
-                    with engine.connect() as connection:
-                        connection.execute(text(f"truncate table {schema}.{tab_name}"))
-                        connection.commit()
-                        connection.execute(text(copy))
-                        connection.commit()
-                else:
-                    print(f"{schema}.{tab_name} não adicionado por ter mais de 1600 colunas: {n_cols} colunas")
-    
+                    if n_cols <= 1600:
+                        #df.iloc[0:1,:].to_sql(tab_name, schema=schema, con=engine, chunksize = 5000, index=False, method=None, if_exists='replace')
+                        df.to_sql(tab_name, schema=schema, con=engine, chunksize = 5000, index=False, method=None, if_exists='replace')
+                        del df
+                        print(f"Adicionando dados: {schema}.{tab_name}")
+                        #with engine.connect() as connection:
+                        #    connection.execute(text(f"truncate table {schema}.{tab_name}"))
+                        #    connection.commit()
+                        #    connection.execute(text(copy))
+                        #    connection.commit()
+                    else:
+                        columns = list(df.columns)
+                        left_col = columns[:math.celing(n_cols/2)]
+                        rigth_col = columns[math.celing(n_cols/2):]
+                        print(f"{schema}.{tab_name} dividida por ter mais de 1600 colunas: {n_cols} colunas")
+                        #df[left_col].iloc[0:1,:].to_sql(f"part01_{tab_name}", schema=schema, con=engine, chunksize = 5000, index=True, method=None, if_exists='replace')
+                        df[left_col].to_sql(f"part01_{tab_name}", schema=schema, con=engine, chunksize = 5000, index=True, method=None, if_exists='replace')
+                        print(f"Adicionando dados: {schema}.part01_{tab_name}")
+                        #with engine.connect() as connection:
+                        #    connection.execute(text(f"truncate table {schema}.part01_{tab_name}"))
+                        #    connection.commit()
+                        #    connection.execute(text(copy))
+                        #    connection.commit()
+                        
+                        #df[rigth_col].iloc[0:1,:].to_sql(f"part02_{tab_name}", schema=schema, con=engine, chunksize = 5000, index=True, method=None, if_exists='replace')
+                        df[rigth_col].to_sql(f"part02_{tab_name}", schema=schema, con=engine, chunksize = 5000, index=True, method=None, if_exists='replace')
+                        del df
+                        print(f"Adicionando dados: {schema}.part02_{tab_name}")
+                        #with engine.connect() as connection:
+                        #    connection.execute(text(f"truncate table {schema}.part02_{tab_name}"))
+                        #    connection.commit()
+                        #    connection.execute(text(copy))
+                        #    connection.commit()
+                except:
+                    print(traceback.format_exc())
+                    print(f"Erro ao carrgar arquivo: {arquivo}")
     
     
 if __name__ == "__main__":
