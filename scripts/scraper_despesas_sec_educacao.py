@@ -4,6 +4,8 @@ import time
 import os
 from configs import DATA_DIR
 
+#https://www.transparencia.pr.gov.br/pte/pages/informacoes/webservices/webservices_despesas.jsf?windowId=e30
+
 def baixa_despesas(dir_data, anos, meses):
     url = "https://www.transparencia.pr.gov.br/pte/ws/despesas/listardespesa?exercicio={exercicio}&mes={mes}&orgao=41"
     
