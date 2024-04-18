@@ -30,4 +30,5 @@ default_sourcers = [
 
 ]
 
-WGET_EXE = '"c:\Program Files (x86)\GnuWin32\\bin\wget.exe"'
+#WGET_EXE = '"c:\Program Files (x86)\GnuWin32\\bin\wget.exe"'
+WGET_EXE = '/usr/bin/wget'

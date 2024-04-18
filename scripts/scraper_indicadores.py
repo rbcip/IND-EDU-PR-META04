@@ -67,7 +67,9 @@ def baixa_zips(fontes, anos=None, reload_links=False):
                             with open(file_html, "w", encoding='utf8') as html:
                                 html.write(reponse_http.text)
                         else:
-                            raise Exception(f"Erro baixando página: {fonte['descricao']}_{ano}, código: {reponse_http.status_code}")
+                            error = f"Erro baixando página: {fonte['descricao']}_{ano}, código: {reponse_http.status_code}"
+                            print(traceback.format_exc())
+                            print(error)                            
                     
                     
                     with open(file_html, "r", encoding='utf8') as html:
