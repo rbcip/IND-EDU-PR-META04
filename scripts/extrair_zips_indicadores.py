@@ -3,6 +3,7 @@ import os
 import zipfile
 import re
 import pandas as pd
+import unicodedata
 
 def extrair_zip_indicadores(sourcers):
     for source in sourcers:
@@ -22,6 +23,7 @@ def extrair_zip_indicadores(sourcers):
                                 fin = zip_ref.open(infile)
                                 content = fin.read()
                                 name_file = infile.split('/')[-1].lower()
+                                name_file = unicodedata.normalize('NFKD', name_file.encode('ascii', 'ignore').decode('utf8'))
                                 with open(os.path.join(DATA_DIR, source['descricao'], name_file), 'wb') as f:
                                     f.write(content)
 
@@ -30,8 +32,8 @@ def agrupa_arquivos(sourcers):
     for source in sourcers:
         if source['tipo'] == TIPO_INDICADOR:
             print(source['descricao'])
-            pxls = re.compile('_[0-9]{4}.xls[x]{0,}')
-            pcsv = re.compile('_[0-9]{4}.csv')
+            pxls = re.compile('(?:_|\ )[0-9]{4}.xls[x]{0,}')
+            pcsv = re.compile('(?:_|\ )[0-9]{4}.csv')
             dir = os.path.join(DATA_DIR, source['descricao'])
             files = os.listdir(dir)
             files.sort()
