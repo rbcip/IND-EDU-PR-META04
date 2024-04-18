@@ -9,17 +9,17 @@ O scraper salva os arquivos zip em uma pasta configurada no arquivo **scrips/scr
  > mkdir -p zip/enem
  > mkdir -p zip/saeb
  > mkdir -p tmp
- > mkdir dados (configurável no arquivo configs.py)
+ > mkdir -p dados/csv (configurável no arquivo configs.py)
 
-# Uso
+# Microdados do INEP
 
 Depois pode-se executar de dentro do diretório scripts/
 
- > python -m scraper
+ > python -m scraper_microdados
 
  O script também permite passar um ano específico para os arquivos
 
- > python -m scraper 2021
+ > python -m scraper_microdados 2021
 
 Dentro do scraper.py existe uma lista com as fontes de microdados. Elas podem ser comentadas para não buscar a fonte específica, ou pode-se acrescentar mais fontes, desde que sigam o padrão das outras páginas de microdados (arquivo zip com o ano e classe css do link external-link)
 
@@ -35,8 +35,30 @@ Para Bolsa Família do Dados.Gov (https://dados.gov.br/dados/conjuntos-dados/bol
 
 Para extrair os dados pode-se utilizar o script **extrair_zips.py**
 
-> python -m extrair_zips
+> python -m extrair_zips_microdados
 
 Ele vai colocar os arquivos CSVs e TXT (que estão em diretórios DADOS nos .ZIPs) na pasta de dados. (Exceto para microdados saeb1999 pois os dados no zip também estão zipados)
 
-O script datasets2db permite carregar dados dos csvs no postgresql local. Mas alguns arquivos possuem mais de 1600 colunas e não são possíveis de carregar. O processo pode ser um pouco demorado também.
+O script **datasets2db** permite carregar dados dos csvs no postgresql local. Mas alguns arquivos possuem mais de 1600 colunas e não são possíveis de carregar. O processo pode ser um pouco demorado também.
+
+***OBS:** O arquivo de configuração da pasta script (configs.py) inclui uma informação de filtro para os microdados no momento de tentar salvar no banco através do script **datasets2db**.
+
+# Indicadores do INEP
+
+De forma similar, pode-se baixar os dados de indicadores pelo script:
+
+> python -m scraper_indicadores
+
+E extrair para o diretório de dados com o comando:
+
+> python -m extrair_zips_indicadores
+
+Apesar de serem similares, optou-se por manter scripts separados para microdados e indicadores devido às diferenças entre eles no aspecto de scraper e formato dos arquivos de dados.
+
+# Dados do Portal da Transparência do Paraná
+
+Através do script:
+
+> python -m scraper_despesas_sec_educacao
+
+É possível baixar os dados de despesas na secretatia de educação via API. O script baixa os dados por ano, mantendo os CSVs, e também consolida em um xlsx.
