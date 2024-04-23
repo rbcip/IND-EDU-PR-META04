@@ -29,7 +29,20 @@ class ObjectScraper():
     verify = False
     headers = {"User-Agent": ua.random}
     parser = 'html.parser'
-        
+    header2= {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'pt-BR,en-US;q=0.7,en;q=0.3',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1'
+            }
+    
+    
     def __repr__(self):
         return str(self.__dict__)
 
@@ -73,8 +86,13 @@ def baixa_zips(fontes, anos=None, reload_links=False):
                         if re.search(ano_busca, link["href"]):
                             file_name_aux = os.path.join(fonte["diretorio_zip"], link["href"].split("/")[-1])
                             print(f'Baixando {link["href"]} para {file_name_aux}')
-                            cmd = f"{WGET_EXE} -c --ca-certificate={CERT}  {link['href']} -O {file_name_aux}"
+                            cmd = f"{WGET_EXE} -c --ca-certificate={CERT} --no-check-certificate {link['href']} -O {file_name_aux}"
                             runcmd(cmd, verbose = False)
+                            #verify=ObjectScraper.verify ".\INEP.pem"
+                            #r = s.get(link["href"], allow_redirects=True, verify=".\INEP.pem", headers=ObjectScraper.header2, stream=True)
+                            #with open(file_name_aux, mode='wb') as file:
+                            #    file.write(r.content)
+                                
                             time.sleep(1)
                             i = len(anos_lista) #Sai do laço
                         i += 1

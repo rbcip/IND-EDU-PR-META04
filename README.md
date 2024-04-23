@@ -3,7 +3,23 @@
 
  # Instalação
 
+ > Instalar o WGET para windows disponível em **http://downloads.sourceforge.net/gnuwin32/wget-1.11.4-1-setup.exe**.
+
+Instalar o python com a opção "Add Python to environment variables" marcada.
+
+Opcionalmente, se desejar um virtualenv executar:
+ > pip install virtualenv
+ > virtualenv indicadores
+ > .\indicadores\Scripts\activate
+
+Instalar as dependências:
+
+ > pip install -r requirements.txt
+
+
+
 O scraper salva os arquivos zip em uma pasta configurada no arquivo **scrips/scraper.py**. Deve-se mudar a configuração ou criar as pastas no diretório do código. O diretório tmp é utilizando para baixar as páginas html que possuem os links para os zips.
+ 
  > mkdir -p zip/censoescolar
  > mkdir -p zip/encceja
  > mkdir -p zip/enem
@@ -15,6 +31,7 @@ O scraper salva os arquivos zip em uma pasta configurada no arquivo **scrips/scr
 
 Depois pode-se executar de dentro do diretório scripts/
 
+ > .\indicadores\Scripts\activate
  > python -m scraper_microdados
 
  O script também permite passar um ano específico para os arquivos
