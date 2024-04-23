@@ -44,7 +44,7 @@ def agrupa_arquivos(sourcers):
                         df = pd.read_csv(os.path.join(dir, file)).dropna()
                         p = pcsv
                     else:
-                        df = pd.read_excel(os.path.join(dir, file), header=10).dropna()
+                        df = pd.read_excel(os.path.join(dir, file), header=source['header_line']).dropna()
                         p = pxls
                         
                     filename = re.sub(p, '', file)                    

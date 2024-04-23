@@ -81,7 +81,7 @@ def baixa_zips(fontes, anos=None, reload_links=False):
                         print(f'Baixando {link["href"]} para {file_name_aux}')
                         if os.name == 'nt':
                             file_name_aux = file_name_aux.replace('/', '\\')
-                        cmd = f"{WGET_EXE} -c --ca-certificate={CERT}  {link['href']} -O {file_name_aux}"
+                        cmd = f"{WGET_EXE} -c --ca-certificate={CERT} --no-check-certificate {link['href']} -O {file_name_aux}"
                         print(cmd)
                         runcmd(cmd, verbose = False)
                         time.sleep(1)

@@ -5,3 +5,4 @@ certifi
 pyopenssl
 openpyxl
 xlrd
+pandas
