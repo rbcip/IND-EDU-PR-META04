@@ -26,11 +26,29 @@ default_sourcers = [
     {"tipo": TIPO_INDICADOR, "descricao": "regularidade-do-corpo-docente", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/regularidade-do-corpo-docente/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "regularidade-do-corpo-docente"), 'filtro': {}, 'header_line': 9},
     {"tipo": TIPO_INDICADOR, "descricao": "remuneracao-media-dos-docentes", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/remuneracao-media-dos-docentes/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "remuneracao-media-dos-docentes"), 'filtro': {}, 'header_line': 8},
     {"tipo": TIPO_INDICADOR, "descricao": "taxas-de-distorcao-idade-serie", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-distorcao-idade-serie/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-distorcao-idade-serie"), 'filtro': {}, 'header_line': 9},
-    {"tipo": TIPO_INDICADOR, "descricao": "taxas-de-nao-resposta", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-nao-resposta/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-nao-resposta"), 'filtro': {}, 'header_line': 9},
+    {"tipo": TIPO_INDICADOR, "descricao": "taxas-de-nao-resposta", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-nao-resposta/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-nao-resposta"), 'filtro': {}, 'header_line': 8},
     {"tipo": TIPO_INDICADOR, "descricao": "taxas-de-transicao", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-transicao/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-transicao"), 'filtro': {}, 'header_line': 8},
     {"tipo": TIPO_INDICADOR, "descricao": "taxas-de-rendimento-escolar", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-rendimento-escolar/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-rendimento-escolar"), 'filtro': {}, 'header_line': 8},
 
 ]
 
-WGET_EXE = '"c:\\Program Files (x86)\\GnuWin32\\bin\\wget.exe"'
+base_header1 = ['Ano', 'Regiao', 'Localizacao', 'Rede', 'Tx_de_Nao_Resp_Fund8e9_Total',	'Tx_de_Nao_Resp_Fund8e9_Anos_Iniciais1_5', 'Tx_de_Nao_Resp_Fund8e9_Anos_Finais6_9', 'Tx_de_Nao_Resp_Fund8e9_1_Ano', 'Tx_de_Nao_Resp_Fund8e9_2_Ano', 'Tx_de_Nao_Resp_Fund8e9_3_Ano', 'Tx_de_Nao_Resp_Fund8e9_4_Ano', 'Tx_de_Nao_Resp_Fund8e9_5_Ano', 'Tx_de_Nao_Resp_Fund8e9_6_Ano', 'Tx_de_Nao_Resp_Fund8e9_7_Ano', 'Tx_de_Nao_Resp_Fund8e9_8_Ano', 'Tx_de_Nao_Resp_Fund8e9_9_Ano',
+                'Tx_de_Nao_Resp_Medio_Total',	'Tx_de_Nao_Resp_Medio_1_Ano', 'Tx_de_Nao_Resp_Medio_2_Ano', 'Tx_de_Nao_Resp_Medio_3_Ano', 'Tx_de_Nao_Resp_Medio_4_Ano', 'Total_Medio_Nao_Seriado']
+
+use_header = {
+        'tnr_regioes': {'line': 10, 'header': base_header1},
+        
+        'tnr_ufs': {'line': 10, 'header': base_header1},
+        
+        'taxa no-resposta regies': {'line': 10, 'header': base_header1},
+        
+        'taxa no-resposta brasil': {'line': 10, 'header': base_header1},
+        
+        'tnr_brasil': {'line': 10, 'header': base_header1},
+        
+        'taxa no-resposta uf': {'line': 10, 'header': base_header1}
+        
+    }
+
+WGET_EXE = '"c:\\Program Files (x86)\\GnuWin32\\bin\\wget.exe"'#
 #WGET_EXE = '/usr/bin/wget'

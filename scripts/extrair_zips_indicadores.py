@@ -1,9 +1,10 @@
-from configs import DATA_DIR, default_sourcers, TIPO_INDICADOR
+from configs import DATA_DIR, default_sourcers, TIPO_INDICADOR, use_header
 import os
 import zipfile
 import re
 import pandas as pd
 import unicodedata
+import traceback
 
 def extrair_zip_indicadores(sourcers):
     for source in sourcers:
@@ -32,28 +33,39 @@ def agrupa_arquivos(sourcers):
     for source in sourcers:
         if source['tipo'] == TIPO_INDICADOR:
             print(source['descricao'])
-            pxls = re.compile('(?:_|\ )[0-9]{4}.xls[x]{0,}')
-            pcsv = re.compile('(?:_|\ )[0-9]{4}.csv')
+            pxls = re.compile(r'(?:_|\ )[0-9]{4}\.xls[x]{0,}')
+            pcsv = re.compile(r'(?:_|\ )[0-9]{4}\.csv')
             dir = os.path.join(DATA_DIR, source['descricao'])
             files = os.listdir(dir)
             files.sort()
             dfs = {}
             for file in files:
-                try:
+                if '.csv' in file:
+                    filename = re.sub(pcsv, '', file)
+                else:
+                    filename = re.sub(pxls, '', file)
+                
+                try:                    
+                    if filename in use_header:
+                        header_line = use_header[filename]['line']
+                        columns = use_header[filename]['header']
+                    else:
+                        header_line = source['header_line']
+                        columns = None
+                        
                     if '.csv' in file:
                         df = pd.read_csv(os.path.join(dir, file)).dropna()
-                        p = pcsv
                     else:
-                        df = pd.read_excel(os.path.join(dir, file), header=source['header_line']).dropna()
-                        p = pxls
+                        df = pd.read_excel(os.path.join(dir, file), header=header_line, names=columns).dropna()
                         
-                    filename = re.sub(p, '', file)                    
+                                     
                     if filename not in dfs:
                         dfs[filename] = df
                     else:
                         dfs[filename] = pd.concat((dfs[filename], df))
                 except:
-                    error = f"Erro ao agrupar arquivo {filename}"
+                    error = f"Erro ao agrupar arquivo {file}"
+                    print(traceback.format_exc())
                     print(error)
 
             for filename in dfs:
@@ -61,6 +73,7 @@ def agrupa_arquivos(sourcers):
                     dfs[filename].to_csv(os.path.join(dir, f"{filename}.csv"), index=False)
                 except:
                     error = f"Erro ao agrupar arquivo {filename}"
+                    print(traceback.format_exc())
                     print(error)
         
 
