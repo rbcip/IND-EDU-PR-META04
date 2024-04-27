@@ -6,6 +6,7 @@ from configs import DATA_DIR, default_sourcers
 import re
 import math
 import traceback
+from utils import agrupa_dataframe
 
 def extrair_nm_base(txt):
     aux = txt.split('.')[0]
@@ -27,17 +28,6 @@ def inicia_engine():
     database=DB)
     engine = create_engine(url_object)
     return engine
-
-def agrupa_arquivos(df1, df2):
-    for col in df1.columns:
-        if col not in df2.columns:
-            df2[col] = None
-            
-    for col in df2.columns:
-        if col not in df1.columns:
-            df1[col] = None
-
-    return pd.concat([df1, df2])
 
 def concat_arquivos(dir_base: str, sourcers):
     dfs = {}
@@ -61,7 +51,7 @@ def concat_arquivos(dir_base: str, sourcers):
                     print(f"Adicionando: {filename}")
                     df_aux = pd.read_csv(arquivo, encoding='ISO-8859-1', sep=';', engine='c', low_memory=False)
                     df_aux['origem_registro'] = filename
-                    dfs[nm_base] = agrupa_arquivos(dfs[nm_base], df_aux)
+                    dfs[nm_base] = agrupa_dataframe(dfs[nm_base], df_aux)
                     print(f"Adicionado: {filename} com shape {df_aux.shape} resultando em {dfs[nm_base].shape}")
                     del df_aux
                     print('####')

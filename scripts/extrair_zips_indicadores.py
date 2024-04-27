@@ -1,4 +1,4 @@
-from configs import DATA_DIR, default_sourcers, TIPO_INDICADOR, use_header
+from configs import DATA_DIR, default_sourcers, TIPO_INDICADOR, use_header, pos_add_head, include_head_for_file
 import os
 import zipfile
 import re
@@ -33,13 +33,20 @@ def agrupa_arquivos(sourcers):
     for source in sourcers:
         if source['tipo'] == TIPO_INDICADOR:
             print(source['descricao'])
-            pxls = re.compile(r'(?:_|\ )[0-9]{4}\.xls[x]{0,}')
+            pxls = re.compile(r'(?:_|\ )(?:[0-9]{4}|[0-9]{4}_[0-9]{4})\.xls[x]{0,}')
             pcsv = re.compile(r'(?:_|\ )[0-9]{4}\.csv')
             dir = os.path.join(DATA_DIR, source['descricao'])
-            files = os.listdir(dir)
+            files = []
+            for file in os.listdir(dir):
+                if file[:2] != '~$' and ('.xls' in file or '.csv' in file):
+                    files.append(file)
+            
             files.sort()
             dfs = {}
             for file in files:
+                header_line = source['header_line']
+                columns = None
+                
                 if '.csv' in file:
                     filename = re.sub(pcsv, '', file)
                 else:
@@ -48,21 +55,26 @@ def agrupa_arquivos(sourcers):
                 try:                    
                     if filename in use_header:
                         header_line = use_header[filename]['line']
-                        columns = use_header[filename]['header']
-                    else:
-                        header_line = source['header_line']
-                        columns = None
-                        
+                        columns = use_header[filename]['header'].copy()
+                        if file in include_head_for_file:
+                            for head_pos in include_head_for_file[file]:
+                                columns.insert(head_pos, include_head_for_file[file][head_pos])
+
                     if '.csv' in file:
                         df = pd.read_csv(os.path.join(dir, file)).dropna()
                     else:
                         df = pd.read_excel(os.path.join(dir, file), header=header_line, names=columns).dropna()
                         
-                                     
+                    if filename in pos_add_head:
+                        for k in pos_add_head[filename]:
+                            if k not in df.columns:
+                                df[k] = pos_add_head[filename][k]
+
                     if filename not in dfs:
                         dfs[filename] = df
                     else:
                         dfs[filename] = pd.concat((dfs[filename], df))
+
                 except:
                     error = f"Erro ao agrupar arquivo {file}"
                     print(traceback.format_exc())
