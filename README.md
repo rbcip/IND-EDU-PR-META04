@@ -20,10 +20,10 @@ Instalar as dependências:
 
 O scraper salva os arquivos zip em uma pasta configurada no arquivo **scrips/scraper.py**. Deve-se mudar a configuração ou criar as pastas no diretório do código. O diretório tmp é utilizando para baixar as páginas html que possuem os links para os zips.
  
- > mkdir -p zip/censoescolar
- > mkdir -p zip/encceja
- > mkdir -p zip/enem
- > mkdir -p zip/saeb
+ > mkdir -p zips/censoescolar
+ > mkdir -p zips/encceja
+ > mkdir -p zips/enem
+ > mkdir -p zips/saeb
  > mkdir -p tmp
  > mkdir -p dados/csv (configurável no arquivo configs.py)
 
