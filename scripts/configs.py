@@ -16,19 +16,19 @@ default_sourcers = [
     {"tipo": TIPO_MICRODADOS, "descricao": "saeb", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/saeb", "diretorio_zip": os.path.join(ZIP_PATH, "saeb"), 'filtro': {'SG_UF_ESC': '41-PR'}},
     {"tipo": TIPO_MICRODADOS, "descricao": "enem", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enem", "diretorio_zip": os.path.join(ZIP_PATH, "enem"), 'filtro': {'CO_UF': 'PR'}},
     
-    {"tipo": TIPO_INDICADOR, "descricao": "adequacao-da-formacao-docente", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/adequacao-da-formacao-docente/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "adequacao-da-formacao-docente"), 'filtro': {}, 'header_line': 10},
+    #{"tipo": TIPO_INDICADOR, "descricao": "adequacao-da-formacao-docente", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/adequacao-da-formacao-docente/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "adequacao-da-formacao-docente"), 'filtro': {}, 'header_line': 10},
     {"tipo": TIPO_INDICADOR, "descricao": "complexidade-de-gestao-da-escola", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/complexidade-de-gestao-da-escola/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "complexidade-de-gestao-da-escola"), 'filtro': {}, 'header_line': 8},
-    {"tipo": TIPO_INDICADOR, "descricao": "esforco-docente", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/esforco-docente/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "esforco-docente"), 'filtro': {}, 'header_line': 10},
-    {"tipo": TIPO_INDICADOR, "descricao": "media-de-alunos-por-turma", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/media-de-alunos-por-turma/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "media-de-alunos-por-turma"), 'filtro': {}, 'header_line': 10},
-    {"tipo": TIPO_INDICADOR, "descricao": "media-de-horas-aula-diaria", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/media-de-horas-aula-diaria/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "media-de-horas-aula-diaria"), 'filtro': {}, 'header_line': 9},
-    {"tipo": TIPO_INDICADOR, "descricao": "nivel-socioeconomico", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/nivel-socioeconomico/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "nivel-socioeconomico"), 'filtro': {}, 'header_line': 10},
-    {"tipo": TIPO_INDICADOR, "descricao": "percentual-de-docentes-com-curso-superior", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/percentual-de-docentes-com-curso-superior/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "percentual-de-docentes-com-curso-superior"), 'filtro': {}, 'header_line': 10},
-    {"tipo": TIPO_INDICADOR, "descricao": "regularidade-do-corpo-docente", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/regularidade-do-corpo-docente/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "regularidade-do-corpo-docente"), 'filtro': {}, 'header_line': 9},
-    {"tipo": TIPO_INDICADOR, "descricao": "remuneracao-media-dos-docentes", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/remuneracao-media-dos-docentes/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "remuneracao-media-dos-docentes"), 'filtro': {}, 'header_line': 8},
-    {"tipo": TIPO_INDICADOR, "descricao": "taxas-de-distorcao-idade-serie", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-distorcao-idade-serie/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-distorcao-idade-serie"), 'filtro': {}, 'header_line': 8},
-    {"tipo": TIPO_INDICADOR, "descricao": "taxas-de-nao-resposta", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-nao-resposta/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-nao-resposta"), 'filtro': {}, 'header_line': 8},
-    {"tipo": TIPO_INDICADOR, "descricao": "taxas-de-transicao", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-transicao/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-transicao"), 'filtro': {}, 'header_line': 8},
-    {"tipo": TIPO_INDICADOR, "descricao": "taxas-de-rendimento-escolar", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-rendimento-escolar/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-rendimento-escolar"), 'filtro': {}, 'header_line': 8},
+    #{"tipo": TIPO_INDICADOR, "descricao": "esforco-docente", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/esforco-docente/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "esforco-docente"), 'filtro': {}, 'header_line': 10},
+    #{"tipo": TIPO_INDICADOR, "descricao": "media-de-alunos-por-turma", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/media-de-alunos-por-turma/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "media-de-alunos-por-turma"), 'filtro': {}, 'header_line': 10},
+    #{"tipo": TIPO_INDICADOR, "descricao": "media-de-horas-aula-diaria", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/media-de-horas-aula-diaria/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "media-de-horas-aula-diaria"), 'filtro': {}, 'header_line': 9},
+    #{"tipo": TIPO_INDICADOR, "descricao": "nivel-socioeconomico", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/nivel-socioeconomico/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "nivel-socioeconomico"), 'filtro': {}, 'header_line': 10},
+    #{"tipo": TIPO_INDICADOR, "descricao": "percentual-de-docentes-com-curso-superior", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/percentual-de-docentes-com-curso-superior/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "percentual-de-docentes-com-curso-superior"), 'filtro': {}, 'header_line': 10},
+    #{"tipo": TIPO_INDICADOR, "descricao": "regularidade-do-corpo-docente", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/regularidade-do-corpo-docente/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "regularidade-do-corpo-docente"), 'filtro': {}, 'header_line': 9},
+    #{"tipo": TIPO_INDICADOR, "descricao": "remuneracao-media-dos-docentes", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/remuneracao-media-dos-docentes/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "remuneracao-media-dos-docentes"), 'filtro': {}, 'header_line': 8},
+    #{"tipo": TIPO_INDICADOR, "descricao": "taxas-de-distorcao-idade-serie", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-distorcao-idade-serie/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-distorcao-idade-serie"), 'filtro': {}, 'header_line': 8},
+    #{"tipo": TIPO_INDICADOR, "descricao": "taxas-de-nao-resposta", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-nao-resposta/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-nao-resposta"), 'filtro': {}, 'header_line': 8},
+    #{"tipo": TIPO_INDICADOR, "descricao": "taxas-de-transicao", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-transicao/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-transicao"), 'filtro': {}, 'header_line': 8},
+    #{"tipo": TIPO_INDICADOR, "descricao": "taxas-de-rendimento-escolar", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/taxas-de-rendimento-escolar/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "taxas-de-rendimento-escolar"), 'filtro': {}, 'header_line': 8},
 
 ]
 
@@ -63,6 +63,10 @@ base_header5 = ['Ano', 'Regiao_UF_Abrangencia', 'Localizacao', 'Rede',
                 
                 'Tx_abandono_Total',	'Tx_abandono_Anos_1_5', 'Tx_abandono_Anos_6_9', 'Tx_abandono_1_Ano', 'Tx_abandono_2_Ano', 'Tx_abandono_3_Ano', 'Tx_abandono_4_Ano', 'Tx_abandono_5_Ano', 'Tx_abandono_6_Ano', 'Tx_abandono_7_Ano', 'Tx_abandono_8_Ano', 'Tx_abandono_9_Ano',
                 'Tx_abandono_Medio_Total',	'Tx_abandono_Medio_1_Serie', 'Tx_abandono_Medio_2_Serie', 'Tx_abandono_Medio_3_Serie', 'Tx_abandono_Medio_4_Serie', 'Tx_abandono_Medio_Nao_Seriado',
+                ]
+
+base_header6 = ['Ano', 'Regiao_Abrangencia', 'Localizacao', 'Rede', 
+                'PercEscSegNvlIndCmplxGestaoN1', 'PercEscSegNvlIndCmplxGestaoN2', 'PercEscSegNvlIndCmplxGestaoN3', 'PercEscSegNvlIndCmplxGestaoN4', 'PercEscSegNvlIndCmplxGestaoN5', 'PercEscSegNvlIndCmplxGestaoN6'
                 ]
 
 use_header = {
@@ -124,8 +128,19 @@ use_header = {
         
         'tx_rend_ufs': {'line': 9, 'header': base_header5},
         
-        'tx_rend_regioes': {'line': 8, 'header': base_header5}                
-                
+        'tx_rend_regioes': {'line': 8, 'header': base_header5},
+        
+        ##############################
+        
+        'icg_brasil': {'line': 8, 'header': base_header6},
+        
+        'icg_brasil_regioes_ufs': {'line': 8, 'header': base_header6},
+        
+        'icg_regioes': {'line': 8, 'header': base_header6},
+        
+        'icg_ufs': {'line': 8, 'header': base_header6[:2] + ['UF'] + base_header6[2:]},
+        
+        
     }
 
 include_head_for_file = {
@@ -146,6 +161,13 @@ pos_add_head = {
         'tdi_regioes': {'COD_UF': -1, 'UF': '--'},
         
         'tdi_ufs': {'COD_UF': -1},
+        
+        'icg_brasil': {'UF': '--'},
+        
+        'icg_brasil_regioes_ufs': {'UF': '--'},
+        
+        'icg_regioes': {'UF': '--'}
+        
     }
 
 WGET_EXE = '"c:\\Program Files (x86)\\GnuWin32\\bin\\wget.exe"'
