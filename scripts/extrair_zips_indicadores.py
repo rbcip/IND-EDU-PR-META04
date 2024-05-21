@@ -1,10 +1,11 @@
-from configs import DATA_DIR, default_sourcers, TIPO_INDICADOR, use_header, pos_add_head, include_head_for_file
+from configs import DATA_DIR, default_sourcers, TIPO_INDICADOR, use_header, pos_add_head, include_head_for_file, start_head_for_file, pre_add_head_file
 import os
 import zipfile
 import re
 import pandas as pd
 import unicodedata
 import traceback
+import shutil
 
 def extrair_zip_indicadores(sourcers):
     for source in sourcers:
@@ -27,34 +28,44 @@ def extrair_zip_indicadores(sourcers):
                                 name_file = unicodedata.normalize('NFKD', name_file.encode('ascii', 'ignore').decode('utf8'))
                                 with open(os.path.join(DATA_DIR, source['descricao'], name_file), 'wb') as f:
                                     f.write(content)
+                                    
+                elif file[-4: ].lower() == '.csv' or file[-4: ].lower() == '.xls' or file[-5: ].lower() == '.xlsx':
+                    shutil.copyfile(os.path.join(source['diretorio_zip'], file), os.path.join(DATA_DIR, source['descricao'], file.lower()))
 
 
 def agrupa_arquivos(sourcers):
     for source in sourcers:
         if source['tipo'] == TIPO_INDICADOR:
             print(source['descricao'])
-            pxls = re.compile(r'(?:_|\ )(?:[0-9]{4}|[0-9]{4}_[0-9]{4})\.xls[x]{0,}')
-            pcsv = re.compile(r'(?:_|\ )[0-9]{4}\.csv')
+            #pxls = re.compile(r'(?:_|\ )(?:[0-9]{4}|[0-9]{4}_[0-9]{4})\.xls[x]{0,}')
+            pxls = re.compile(r'(?:[_|\ ][0-9]{4}|[0-9]{4}_[0-9]{4}[_|\ ])(.*)(?:\.xls[x]{0,})')
+            pcsv = re.compile(r'(?:[_|\ ][0-9]{4}|[0-9]{4}_[0-9]{4}[_|\ ])(.*)(?:\.csv)')
             dir = os.path.join(DATA_DIR, source['descricao'])
             files = []
             for file in os.listdir(dir):
-                if file[:2] != '~$' and ('.xls' in file or '.csv' in file):
+                if file[:2] != '~$' and ('.xls' in file or '.xlsx' in file or '.csv' in file):
                     files.append(file)
             
             files.sort()
             dfs = {}
             for file in files:
-                header_line = source['header_line']
+                if file in start_head_for_file:
+                    header_line = start_head_for_file[file]
+                else:
+                    header_line = source['header_line']
+                    
                 columns = None
                 
                 if '.csv' in file:
-                    filename = re.sub(pcsv, '', file)
+                    filename = re.sub(pcsv, r'\1', file)
                 else:
-                    filename = re.sub(pxls, '', file)
+                    filename = re.sub(pxls, r'\1', file)
                 
                 try:                    
                     if filename in use_header:
-                        header_line = use_header[filename]['line']
+                        if file not in start_head_for_file:
+                            header_line = use_header[filename]['line']
+                        
                         columns = use_header[filename]['header'].copy()
                         if file in include_head_for_file:
                             for head_pos in include_head_for_file[file]:
@@ -64,7 +75,12 @@ def agrupa_arquivos(sourcers):
                         df = pd.read_csv(os.path.join(dir, file)).dropna()
                     else:
                         df = pd.read_excel(os.path.join(dir, file), header=header_line, names=columns).dropna()
-                        
+
+
+                    if file in pre_add_head_file:
+                        for k in pre_add_head_file[file]:
+                            df[k] = pre_add_head_file[file][k]
+                                
                     if filename in pos_add_head:
                         for k in pos_add_head[filename]:
                             if k not in df.columns:
