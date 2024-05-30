@@ -1,4 +1,4 @@
-from configs import DATA_DIR, default_sourcers, TIPO_INDICADOR, use_header, pos_add_head, include_head_for_file, start_head_for_file, pre_add_head_file
+from configs import DATA_DIR, default_sourcers, TIPO_INDICADOR, use_header, pos_add_head, include_head_for_file, start_head_for_file, pre_add_head_file, agrupar_arquivos_consolidados
 import os
 import zipfile
 import re
@@ -96,14 +96,32 @@ def agrupa_arquivos(sourcers):
                     print(traceback.format_exc())
                     print(error)
 
+            consolidados = {}
+            
             for filename in dfs:
                 try:
-                    dfs[filename].to_csv(os.path.join(dir, f"{filename}.csv"), index=False)
+                    if filename in agrupar_arquivos_consolidados:
+                        if agrupar_arquivos_consolidados[filename] in consolidados:
+                            consolidados[agrupar_arquivos_consolidados[filename]] = pd.concat((consolidados[agrupar_arquivos_consolidados[filename]], dfs[filename]))
+                        else:
+                            consolidados[agrupar_arquivos_consolidados[filename]] = dfs[filename]
+                    else:
+                        dfs[filename].to_csv(os.path.join(dir, f"{filename}.csv"), index=False)
+                        
                 except:
                     error = f"Erro ao agrupar arquivo {filename}"
                     print(traceback.format_exc())
                     print(error)
         
+            for consolidado in consolidados:
+                try:
+                    consolidados[consolidado].to_csv(os.path.join(dir, f"{consolidado}.csv"), index=False)
+                        
+                except:
+                    error = f"Erro ao consolidar arquivo {consolidado}"
+                    print(traceback.format_exc())
+                    print(error)
+                    
 
 if __name__ == "__main__":
     extrair_zip_indicadores(default_sourcers)
