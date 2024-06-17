@@ -1,5 +1,9 @@
-# IND-EDU-PR-META04
- Indicadores Educacionais do Paraná - Meta 4
+# Datalake do Observatório de Dados da Educação do Estado do Paraná
+ 
+O Observatório de Dados da Educação do Paraná é uma iniciativa da Secretaria de Educação do Governo do Estado do Paraná, que visa criar um ambiente integrado entre a Gestão Pública e a Sociedade. Este projeto tem como objetivo proporcionar transparência às ações do governo estadual e oferecer dados e indicadores educacionais que são fundamentais para a tomada de decisão informada. A base de dados do Observatório é um recurso essencial para pesquisadores, gestores públicos, e cidadãos interessados em acompanhar e entender os indicadores de desempenho educacional no estado.
+
+O repositório GitHub funciona como um Data Lake, onde dados brutos, estruturados e não estruturados são armazenados em seu formato nativo. Este repositório é projetado para permitir a coleta e manutenção de grandes volumes de dados, promovendo transparência e acessibilidade.
+
 
  # Instalação
 
