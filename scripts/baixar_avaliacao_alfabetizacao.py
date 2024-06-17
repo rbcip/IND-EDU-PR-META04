@@ -24,7 +24,7 @@ class SSLAdapter(HTTPAdapter):
     A TransportAdapter that re-enables 3DES support in Requests.
     """
     def init_poolmanager(self, *args, **kwargs):
-        context = create_urllib3_context(ciphers=CIPHERS, cert_reqs=False)
+        context = create_urllib3_context(ciphers=CIPHERS, cert_reqs=True)
         kwargs['ssl_context'] = context
         return super(SSLAdapter, self).init_poolmanager(*args, **kwargs)
 
