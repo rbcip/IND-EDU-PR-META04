@@ -1,6 +1,5 @@
 import requests
 from fake_useragent import UserAgent
-from datetime import date
 import sys
 from configs import DATA_DIR
 import os
@@ -9,20 +8,13 @@ import traceback
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 import pandas as pd
+from utils import ObjectScraper
 
 DIR_DADOS = os.path.join(DATA_DIR, 'bolsafamilia')
 lst_anos = list(range(2013, 2022)) + [2023]  #Um ano antes de PNE
 url_d2023 = "https://aplicacoes.mds.gov.br/sagi/servicos/misocial/?fq=anomes_s:{ano}*&fl=codigo_ibge%2Canomes_s%2Cqtd_familias_beneficiarias_bolsa_familia_s%2Cvalor_repassado_bolsa_familia_s%2Cpbf_vlr_medio_benef_f&fq=valor_repassado_bolsa_familia_s%3A*&q=*%3A*&rows=100000&sort=anomes_s%20desc%2C%20codigo_ibge%20asc&wt=csv"
 url_a2023 = "https://aplicacoes.mds.gov.br/sagi/servicos/misocial?fq=anomes_s:{ano}*&fq=tipo_s:mes_mu&wt=csv&q=*&fl=ibge:codigo_ibge,anomes:anomes_s,qtd_familias_beneficiarias_bolsa_familia,valor_repassado_bolsa_familia&rows=10000000&sort=anomes_s%20asc,%20codigo_ibge%20asc"
 
-class ObjectScraper():
-    ua = UserAgent(browsers=['edge', 'chrome'])
-    verify = True
-    headers = {"User-Agent": ua.random}
-    parser = 'html.parser'
-        
-    def __repr__(self):
-        return str(self.__dict__)
 
 def inicia_engine():
     USER = os.getenv('DB_USER_IND', 'postgres')
