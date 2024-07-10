@@ -9,6 +9,7 @@ import sys
 import subprocess
 from configs import CERT, TMP_DIR, default_sourcers, TIPO_MICRODADOS, WGET_EXE
 from datetime import date
+from utils import ObjectScraper
 
 def runcmd(cmd, verbose = False, *args, **kwargs):
 
@@ -24,23 +25,7 @@ def runcmd(cmd, verbose = False, *args, **kwargs):
         print(std_out.strip(), std_err)
     pass
 
-class ObjectScraper():
-    ua = UserAgent(browsers=['edge', 'chrome'])
-    verify = False
-    headers = {"User-Agent": ua.random}
-    parser = 'html.parser'
-    header2= {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-            'Accept-Language': 'pt-BR,en-US;q=0.7,en;q=0.3',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'none',
-            'Sec-Fetch-User': '?1'
-            }
+
     
     
     def __repr__(self):
