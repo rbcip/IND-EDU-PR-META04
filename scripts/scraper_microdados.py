@@ -10,26 +10,7 @@ import subprocess
 from configs import CERT, TMP_DIR, default_sourcers, TIPO_MICRODADOS, WGET_EXE
 from datetime import date
 from utils import ObjectScraper
-
-def runcmd(cmd, verbose = False, *args, **kwargs):
-
-    process = subprocess.Popen(
-        cmd,
-        stdout = subprocess.PIPE,
-        stderr = subprocess.PIPE,
-        text = True,
-        shell = True
-    )
-    std_out, std_err = process.communicate()
-    if verbose:
-        print(std_out.strip(), std_err)
-    pass
-
-
-    
-    
-    def __repr__(self):
-        return str(self.__dict__)
+from utils import SSLAdapter
 
 
 def baixa_zips(fontes, anos=None, reload_links=False):
@@ -69,15 +50,17 @@ def baixa_zips(fontes, anos=None, reload_links=False):
                     while i < len(anos_lista):
                         ano_busca = re.compile(f'https.*{anos_lista[i]}.*\.zip')
                         if re.search(ano_busca, link["href"]):
+                            s = requests.Session()
+                            s.mount(link["href"], SSLAdapter())
+                            
                             file_name_aux = os.path.join(fonte["diretorio_zip"], link["href"].split("/")[-1])
                             print(f'Baixando {link["href"]} para {file_name_aux}')
-                            cmd = f"{WGET_EXE} -c --ca-certificate={CERT} --no-check-certificate {link['href']} -O {file_name_aux}"
-                            runcmd(cmd, verbose = False)
-                            #verify=ObjectScraper.verify ".\INEP.pem"
-                            #r = s.get(link["href"], allow_redirects=True, verify=".\INEP.pem", headers=ObjectScraper.header2, stream=True)
-                            #with open(file_name_aux, mode='wb') as file:
-                            #    file.write(r.content)
-                                
+                                                        
+                            r = s.get(link["href"], allow_redirects=True, verify="INEP_all.pem", headers=ObjectScraper.headers, stream=True)
+                            if(r.status_code) < 400:
+                                with open(file_name_aux, 'wb') as f:
+                                    f.write(r.content)
+                                    
                             time.sleep(1)
                             i = len(anos_lista) #Sai do laço
                         i += 1

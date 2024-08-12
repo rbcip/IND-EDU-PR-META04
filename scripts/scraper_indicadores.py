@@ -7,34 +7,11 @@ import os
 import time
 import sys
 import subprocess
-from configs import CERT, TMP_DIR, default_sourcers, TIPO_INDICADOR, WGET_EXE
+from configs import CERT, TMP_DIR, default_sourcers, TIPO_INDICADOR
 from datetime import date
+from utils import SSLAdapter, ObjectScraper
 
 # Apenas indicadores de BR e UF pelo regex
-
-def runcmd(cmd, verbose = False, *args, **kwargs):
-
-    process = subprocess.Popen(
-        cmd,
-        stdout = subprocess.PIPE,
-        stderr = subprocess.PIPE,
-        text = True,
-        shell = True
-    )
-    std_out, std_err = process.communicate()
-    if verbose:
-        print(std_out.strip(), std_err)
-    pass
-
-class ObjectScraper():
-    ua = UserAgent(browsers=['edge', 'chrome'])
-    verify = False
-    headers = {"User-Agent": ua.random}
-    parser = 'html.parser'
-        
-    def __repr__(self):
-        return str(self.__dict__)
-
 
 def baixa_zips(fontes, anos=None, reload_links=False):
     if anos == None:
@@ -49,7 +26,6 @@ def baixa_zips(fontes, anos=None, reload_links=False):
 
             for ano in anos_lista:
                 try:
-                    s = requests.Session()
                     file_html = os.path.join(TMP_DIR, f"{fonte['descricao']}_{ano}.html")
                     
                     busca = re.compile('https.*(?:(?:estados)|(?:regioes)|(?:brasil)){1,}.*(?:\.zip|\.xls)', re.IGNORECASE)
@@ -61,8 +37,10 @@ def baixa_zips(fontes, anos=None, reload_links=False):
                         elif fonte['descricao'] == 'taxas-de-transicao':
                             url = f'{url}-{ano+1}'
 
+                        s = requests.Session()
                         
                         reponse_http = s.get(url, allow_redirects=True, verify=ObjectScraper.verify, headers=ObjectScraper.headers)
+
                         if(reponse_http.status_code < 400):
                             with open(file_html, "w", encoding='utf8') as html:
                                 html.write(reponse_http.text)
@@ -77,13 +55,18 @@ def baixa_zips(fontes, anos=None, reload_links=False):
                         
                     ext_links_zip = soup.find_all("a", {'href': busca})
                     for link in ext_links_zip:
+                        s = requests.Session()
+                        s.mount(link["href"], SSLAdapter())
+                        
                         file_name_aux = os.path.join(fonte["diretorio_zip"], link["href"].split("/")[-1])
                         print(f'Baixando {link["href"]} para {file_name_aux}')
-                        if os.name == 'nt':
-                            file_name_aux = file_name_aux.replace('/', '\\')
-                        cmd = f"{WGET_EXE} -c --ca-certificate={CERT} --no-check-certificate {link['href']} -O {file_name_aux}"
-                        print(cmd)
-                        runcmd(cmd, verbose = False)
+                                                
+                        r = s.get(link["href"], allow_redirects=True, verify="INEP_all.pem", headers=ObjectScraper.headers, stream=True)
+                        
+                        if(r.status_code) < 400:
+                            with open(file_name_aux, 'wb') as f:
+                                f.write(r.content)
+                        
                         time.sleep(1)
                         
                 except Exception:

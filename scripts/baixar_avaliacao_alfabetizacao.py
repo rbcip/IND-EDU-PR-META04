@@ -5,33 +5,8 @@ import os
 from utils import ObjectScraper
 import traceback
 import pandas as pd
+from utils import CIPHERS, SSLAdapter
 
-from requests.adapters import HTTPAdapter
-#from requests.packages.urllib3.poolmanager import PoolManager
-import ssl
-
-from requests.packages.urllib3.util.ssl_ import create_urllib3_context
-
-CIPHERS = (
-    'ECDH+AESGCM:DH+AESGCM:ECDH+AES256:DH+AES256:ECDH+AES128:DH+AES:ECDH+HIGH:'
-    'DH+HIGH:ECDH+3DES:DH+3DES:RSA+AESGCM:RSA+AES:RSA+HIGH:RSA+3DES:!aNULL:AES256+EECDH:AES256+EDH'
-    '!eNULL:!MD5'
-)
-
-# AES256+EECDH:AES256+EDH
-class SSLAdapter(HTTPAdapter):
-    """
-    A TransportAdapter that re-enables 3DES support in Requests.
-    """
-    def init_poolmanager(self, *args, **kwargs):
-        context = create_urllib3_context(ciphers=CIPHERS, cert_reqs=True)
-        kwargs['ssl_context'] = context
-        return super(SSLAdapter, self).init_poolmanager(*args, **kwargs)
-
-    def proxy_manager_for(self, *args, **kwargs):
-        context = create_urllib3_context(ciphers=CIPHERS)
-        kwargs['ssl_context'] = context
-        return super(SSLAdapter, self).proxy_manager_for(*args, **kwargs)
 
 url_br_uf = "https://download.inep.gov.br/avaliacao_da_alfabetizacao/resultados_e_metas_ufs.xlsx"
 url_municipios = "https://download.inep.gov.br/avaliacao_da_alfabetizacao/resultados_e_metas_municipios.xlsx"
