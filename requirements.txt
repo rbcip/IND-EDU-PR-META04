@@ -6,3 +6,9 @@ pyopenssl
 openpyxl
 xlrd
 pandas
+jupyter_bokeh
+panel
+numpy
+folium
+jupyterlab
+ipywidgets
