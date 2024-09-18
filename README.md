@@ -7,8 +7,6 @@ O repositório GitHub funciona como um Data Lake, onde dados brutos, estruturado
 
  # Instalação
 
- > Instalar o WGET para windows disponível em **http://downloads.sourceforge.net/gnuwin32/wget-1.11.4-1-setup.exe**.
-
 Instalar o python com a opção "Add Python to environment variables" marcada.
 
 Opcionalmente, se desejar um virtualenv executar:
@@ -83,3 +81,9 @@ Através do script:
 > python -m scraper_despesas_sec_educacao
 
 É possível baixar os dados de despesas na secretatia de educação via API. O script baixa os dados por ano, mantendo os CSVs, e também consolida em um xlsx.
+
+# Dados do TCE/PR do PROGOV
+
+Através do script:
+
+> python -m baixar_avaliacao_progov
