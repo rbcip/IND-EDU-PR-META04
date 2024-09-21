@@ -66,6 +66,7 @@ def identifica_separador(arquivo, encoding='ISO-8859-1'):
     n_cols = 0
     first_line = ""
     temHeader = True
+    
     with open(arquivo, 'r', encoding=encoding) as f:
         lines = 0
         line = f.readline()
@@ -73,20 +74,21 @@ def identifica_separador(arquivo, encoding='ISO-8859-1'):
         chars = {}
                                             
         while line and lines < 5:
-            for sep in seps:
-                nsep = len(line.split(sep))
-                if nsep > 1:
-                    if sep not in chars:
-                        chars[sep] = nsep
+            for s in seps:
+                nsep = len(line.split(s))
+                if len(first_line.split(s)) > 1 and nsep > 1:
+                    if s not in chars:
+                        chars[s] = nsep
                     else:
-                        if chars[sep] != nsep:
-                            del chars[sep]
+                        if chars[s] != nsep:
+                            chars[s] = -1
                             
             lines += 1 
             line = f.readline()        
                         
-            dict(sorted(chars.items(), key=lambda item: item[1], reverse=True))
-            for k in chars:
+        dict(sorted(chars.items(), key=lambda item: item[1], reverse=False))
+        for k in chars:
+            if chars[k] > 0:
                 sep, n_cols = k, chars[k]
 
     hd = first_line.split(sep)
@@ -96,7 +98,7 @@ def identifica_separador(arquivo, encoding='ISO-8859-1'):
             temHeader = False
     
     return sep, n_cols, temHeader
-      
+
 def salva_por_arquivo_banco(dir_base: str, sourcers, engine):
     for sourcer in sourcers:
         print('####')

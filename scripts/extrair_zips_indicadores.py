@@ -127,7 +127,3 @@ if __name__ == "__main__":
     extrair_zip_indicadores(default_sourcers)
     
     agrupa_arquivos(default_sourcers)
-                
-            
-      
-

@@ -39,7 +39,7 @@ def agrupa_arquivos(sourcers):
     for source in sourcers:
         if source['tipo'] == TIPO_MICRODADOS:
             print(source['descricao'])
-            pcsv = re.compile(r'(?:[_|\ ][0-9]{4}|[0-9]{4}_[0-9]{4}[_|\ ])(.*)(?:\.csv)')
+            pcsv = re.compile(r'(?:[_|\ ][0-9]{4}|[0-9]{4}_[0-9]{4}[_|\ ])(.*)(?:\.csv)|(?:\.csv)')
             dir = os.path.join(DATA_DIR, source['descricao'])
             files = []
             dfs = {}
@@ -51,18 +51,20 @@ def agrupa_arquivos(sourcers):
             files.sort()
 
             for file in files:
-                sep, n_cols, temHeader = identifica_separador(os.path.join(dir, file))
-                
+                sep, _, _ = identifica_separador(os.path.join(dir, file))
                 filename = re.sub(pcsv, r'\1', file)
-                df = pd.read_csv(os.path.join(dir, file), encoding='ISO-8859-1', sep=sep, engine='c', low_memory=False).dropna()
-                if filename in filters:
-                    for filtro in filters[filename]:
-                        df = df.query(f"{filtro} == '{filters[filename][filtro]}'")
-                
-                if filename not in dfs:
-                    dfs[filename] = df
-                else:
-                    dfs[filename] = pd.concat((dfs[filename], df))
+
+                if file != f'{filename}.csv':
+                    print(f"Agrupando {file}")
+                    df = pd.read_csv(os.path.join(dir, file), encoding='ISO-8859-1', sep=sep, engine='c', low_memory=False).dropna()
+                    if filename in filters:
+                        for filtro in filters[filename]:
+                            df = df[df[filtro] == filters[filename][filtro]]
+                    
+                    if filename not in dfs:
+                        dfs[filename] = df
+                    else:
+                        dfs[filename] = pd.concat((dfs[filename], df))
                     
             for filename in dfs:
                     try:
@@ -76,6 +78,6 @@ def agrupa_arquivos(sourcers):
 if __name__ == "__main__":
     #extrair_csvs(default_sourcers)
     agrupa_arquivos(default_sourcers)
-            
+
 
 
