@@ -10,10 +10,10 @@ TIPO_MICRODADOS = "microdados"
 OUTROS_INDICADORES = "outros_indicadores" 
 
 default_sourcers = [
-    #{"tipo": TIPO_MICRODADOS, "descricao": "censoescolar", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/censo-escolar", "diretorio_zip": os.path.join(ZIP_PATH, "censoescolar"), 'filtro': {'SG_UF': 'PR'}},
-    #{"tipo": TIPO_MICRODADOS, "descricao": "encceja", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/encceja", "diretorio_zip": os.path.join(ZIP_PATH, "encceja"), 'filtro': {'SG_UF_PROVA': 'PR'}},
+    {"tipo": TIPO_MICRODADOS, "descricao": "censoescolar", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/censo-escolar", "diretorio_zip": os.path.join(ZIP_PATH, "censoescolar"), 'filtro': {'SG_UF': 'PR'}},
+    {"tipo": TIPO_MICRODADOS, "descricao": "encceja", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/encceja", "diretorio_zip": os.path.join(ZIP_PATH, "encceja"), 'filtro': {'SG_UF_PROVA': 'PR'}},
     {"tipo": TIPO_MICRODADOS, "descricao": "saeb", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/saeb", "diretorio_zip": os.path.join(ZIP_PATH, "saeb"), 'filtro': {'SG_UF_ESC': '41-PR'}},
-    #{"tipo": TIPO_MICRODADOS, "descricao": "enem", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enem", "diretorio_zip": os.path.join(ZIP_PATH, "enem"), 'filtro': {'CO_UF': 'PR'}},
+    {"tipo": TIPO_MICRODADOS, "descricao": "enem", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/microdados/enem", "diretorio_zip": os.path.join(ZIP_PATH, "enem"), 'filtro': {'CO_UF': 'PR'}},
     
     {"tipo": TIPO_INDICADOR, "descricao": "adequacao-da-formacao-docente", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/adequacao-da-formacao-docente/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "adequacao-da-formacao-docente"), 'filtro': {}, 'header_line': 10},
     {"tipo": TIPO_INDICADOR, "descricao": "complexidade-de-gestao-da-escola", "url": "https://www.gov.br/inep/pt-br/acesso-a-informacao/dados-abertos/indicadores-educacionais/complexidade-de-gestao-da-escola/{ano}", "diretorio_zip": os.path.join(ZIP_PATH, "complexidade-de-gestao-da-escola"), 'filtro': {}, 'header_line': 8},
@@ -45,7 +45,16 @@ filters = {
     'ts_educacao_infantil': {'CO_UF': 41},
     'ts_escola': {'ID_UF': 41},
     'ts_professor': {'ID_UF': 41},
-    'ts_secretario_municipal': {'ID_UF': 41},
+    'ts_secretario_municipal_2019.csv': {'ID_UF': 41},
+    'ts_secretario_municipal_2021.csv': {'CO_UF': 41},
+    #'microdados_enem': {'CO_UF_ESC': 41},
+}
+
+nao_agrupar = {
+    "saeb": ['ts_secretario_municipal_2021.csv', 'ts_secretario_municipal_2019.csv'],
+    "enem": ['microdados_enem_2013.csv', 'microdados_enem_2014.csv', 'microdados_enem_2015.csv', 'microdados_enem_2016.csv',
+             'microdados_enem_2017.csv', 'microdados_enem_2018.csv', 'microdados_enem_2019.csv', 'microdados_enem_2020.csv',
+             'microdados_enem_2021.csv', 'microdados_enem_2022.csv', 'microdados_enem_2023.csv', 'microdados_enem_2024.csv']
 }
 
 agrupar_arquivos_consolidados = {

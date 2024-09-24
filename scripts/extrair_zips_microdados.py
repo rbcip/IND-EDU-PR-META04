@@ -1,4 +1,4 @@
-from configs import DATA_DIR, default_sourcers, TIPO_MICRODADOS, filters
+from configs import DATA_DIR, default_sourcers, TIPO_MICRODADOS, filters, nao_agrupar
 import os
 import zipfile
 import re
@@ -55,20 +55,37 @@ def agrupa_arquivos(sourcers):
                 filename = re.sub(pcsv, r'\1', file)
 
                 if file != f'{filename}.csv':
-                    print(f"Agrupando {file}")
-                    df = pd.read_csv(os.path.join(dir, file), encoding='ISO-8859-1', sep=sep, engine='c', low_memory=False).dropna()
+                    try:
+                        df = pd.read_csv(os.path.join(dir, file), encoding='ISO-8859-1', sep=sep, engine='c', low_memory=False)
+                    except:
+                        print('Tentando opção low_memory')
+                        del df
+                        df = pd.read_csv(os.path.join(dir, file), encoding='ISO-8859-1', sep=sep, low_memory=True)
+                        #df = pd.read_csv(os.path.join(dir, file), encoding='ISO-8859-1', iterator=True, chunksize=1000)
+                        
+                    key = None
                     if filename in filters:
-                        for filtro in filters[filename]:
-                            df = df[df[filtro] == filters[filename][filtro]]
+                        key = filename
+                    elif file in filters:
+                        key = file
+
+                    if key != None:
+                        for filtro in filters[key]:
+                            df = df[df[filtro] == filters[key][filtro]]
                     
-                    if filename not in dfs:
-                        dfs[filename] = df
+                    if source['descricao'] in nao_agrupar and file in nao_agrupar[source['descricao']]:
+                        print(f"Salvando {file} com filtro")
+                        df.to_csv(os.path.join(dir, f"{file.replace('.csv', '')}_filtrado.csv"), sep='|', index=False)
                     else:
-                        dfs[filename] = pd.concat((dfs[filename], df))
+                        print(f"Agrupando {file}")
+                        if filename not in dfs:
+                            dfs[filename] = df
+                        else:
+                            dfs[filename] = pd.concat((dfs[filename], df))
                     
             for filename in dfs:
                     try:
-                        dfs[filename].to_csv(os.path.join(dir, f"{filename}.csv"), index=False)
+                        dfs[filename].to_csv(os.path.join(dir, f"{filename}.csv"), sep='|', index=False)
                     except:
                         error = f"Erro ao agrupar arquivo {filename}"
                         print(traceback.format_exc())
